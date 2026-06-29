@@ -1,6 +1,6 @@
 ---
 name: sync-agent-symlinks
-description: Analyze and synchronize agent skill exposure after ai-specs skill changes (additions, removals, renames). Use when skills are added/removed in ai-specs and .claude/skills and .cursor/skills must stay aligned through symlinks.
+description: Analyze and synchronize agent skill exposure after ai-specs skill changes (additions, removals, renames). Use when skills are added/removed in ai-specs and .claude/skills and .cursor/skills and .opencode/skills must stay aligned through symlinks.
 author: LIDR.co
 version: 1.0.0
 ---
@@ -17,6 +17,7 @@ Use this skill after any change in `ai-specs/skills` (new skill, removed skill, 
 - Mirror targets are:
   - `.claude/skills`
   - `.cursor/skills`
+  - `.opencode/skills`
 - Manage only entries that are symlinks to `../../ai-specs/skills/<skill-name>`.
 - Do not delete non-symlink directories in mirror targets unless the user explicitly asks.
 - Never overwrite a real directory automatically; report it as a conflict.
@@ -30,6 +31,7 @@ Collect three inventories:
 1. Canonical skills from `ai-specs/skills/*/SKILL.md`
 2. Mirror entries in `.claude/skills`
 3. Mirror entries in `.cursor/skills`
+4. Mirror entries in `.opencode/skills`
 
 From mirror entries, classify:
 - `linked`: valid symlink pointing to existing canonical skill
@@ -90,6 +92,7 @@ Return a concise sync report:
 Expected behavior:
 - Add missing symlink in `.claude/skills`
 - Add missing symlink in `.cursor/skills`
+- Add missing symlink in `.opencode/skills`
 - Verify both links resolve to canonical folder
 
 ### Scenario B - Skill removed from ai-specs
@@ -97,6 +100,7 @@ Expected behavior:
 Expected behavior:
 - Remove orphan canonical symlink from `.claude/skills`
 - Remove orphan canonical symlink from `.cursor/skills`
+- Remove orphan canonical symlink from `.opencode/skills`
 - Keep non-canonical directories untouched and report them
 
 ## Command Patterns (Reference)
@@ -110,14 +114,17 @@ ls ai-specs/skills
 # inspect mirror entries with link metadata
 ls -la .claude/skills
 ls -la .cursor/skills
+ls -la .opencode/skills
 
 # add canonical link
 ln -s ../../ai-specs/skills/<skill-name> .claude/skills/<skill-name>
 ln -s ../../ai-specs/skills/<skill-name> .cursor/skills/<skill-name>
+ln -s ../../ai-specs/skills/<skill-name> .opencode/skills/<skill-name>
 
 # remove orphan canonical link
 rm .claude/skills/<skill-name>
 rm .cursor/skills/<skill-name>
+rm .opencode/skills/<skill-name>
 ```
 
 ## Red Flags
